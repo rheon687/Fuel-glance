@@ -1,4 +1,4 @@
-# Fuel Glance v2.4.1
+# Fuel Glance v2.5.0
 Security-hardened static PWA. Main view switches between E10 petrol and B7S standard diesel while preserving the compact glance layout. Price order, price colour and freshness colour follow the selected fuel. Bottom centre combined pump+magnifier opens station management. Station selection avoids duplicate postcode display. Favourites and selected fuel remain device-local. No accounts, analytics or secrets.
 
 
@@ -31,3 +31,12 @@ Security-hardened static PWA. Main view switches between E10 petrol and B7S stan
 ## v2.4.1
 - Replaces the custom wheel/target-like station-settings artwork with a conventional cog glyph.
 - No behavioural changes.
+
+
+## v2.5.0
+- Frozen Your Stations styling: large Back action, station cards, explicit Edit/Remove buttons, large Add Station control, no duplicate fuel-mode selector.
+- Frozen Add Station flow: postcode is a search origin; displays the three nearest open Fuel Finder forecourts by straight-line distance.
+- UK postcode geolocation uses api.postcodes.io with no account or API key.
+- Postcodes.io is added as the only additional CSP network destination.
+- Friendly naming remains the final save step.
+- Main-screen Petrol E10 / Diesel B7 controls and settings cog remain unchanged.
