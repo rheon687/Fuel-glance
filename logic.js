@@ -1,52 +1,13 @@
-export const DEFAULT_STATIONS = [
-  { id: 'postcode:SK82AJ', displayName: 'Esso', postcode: 'SK8 2AJ' },
-  { id: 'postcode:SK30RL', displayName: 'Morrisons', postcode: 'SK3 0RL' },
-  { id: 'postcode:SK12BT', displayName: 'Tesco', postcode: 'SK1 2BT' },
-  { id: 'postcode:OL70NS', displayName: 'Work', postcode: 'OL7 0NS' }
-];
-export const MAX_STATIONS = 6;
-export function normalizePostcode(value=''){ return value.toUpperCase().replace(/\s+/g,'').trim(); }
-export function formatPostcode(value=''){
-  const clean=normalizePostcode(value); if(clean.length<5)return value.toUpperCase().trim();
-  return `${clean.slice(0,-3)} ${clean.slice(-3)}`;
-}
-export function rankClass(value, values, lowerIsBetter=true){
-  const valid=values.filter(Number.isFinite); if(!Number.isFinite(value)||!valid.length)return '';
-  const unique=[...new Set(valid)].sort((a,b)=>a-b); if(unique.length===1)return 'green';
-  const min=unique[0], max=unique[unique.length-1];
-  if(lowerIsBetter) return value===min?'green':value===max?'red':'orange';
-  return value===max?'green':value===min?'red':'orange';
-}
-export function formatAge(date,now=new Date()){
-  const ms=now-date;if(ms<0)return 'Just updated';const mins=Math.floor(ms/60000);
-  if(mins<1)return 'Just updated';if(mins<60)return `${mins} minute${mins===1?'':'s'} ago`;
-  const hrs=Math.floor(mins/60);if(hrs<24)return `${hrs} hour${hrs===1?'':'s'} ago`;
-  const days=Math.floor(hrs/24);return days===1?'Yesterday':`${days} days ago`;
-}
-export function parseCsv(text){
-  const rows=[];let row=[],field='',quoted=false;
-  for(let i=0;i<text.length;i++){const c=text[i];if(quoted){if(c==='"'&&text[i+1]==='"'){field+='"';i++;}else if(c==='"')quoted=false;else field+=c;}else if(c==='"')quoted=true;else if(c===','){row.push(field);field='';}else if(c==='\n'){row.push(field.replace(/\r$/,''));rows.push(row);row=[];field='';}else field+=c;}
-  if(field||row.length){row.push(field);rows.push(row);}const headers=rows.shift()||[];
-  return rows.filter(r=>r.some(Boolean)).map(r=>Object.fromEntries(headers.map((h,i)=>[h,r[i]??''])));
-}
-export function rowPostcode(row){return row['forecourts.location.postcode']||row['forecourts.postcode']||row.postcode||'';}
-export function rowLabel(row){return row['forecourts.trading_name']||row['forecourts.brand_name']||'Unnamed forecourt';}
-export function findByPostcode(rows,postcode){
-  const wanted=normalizePostcode(postcode);
-  return rows.filter(r=>normalizePostcode(rowPostcode(r))===wanted && String(r['forecourts.permanent_closure']).toUpperCase()!=='TRUE')
-    .map(r=>({nodeId:r['forecourts.node_id']||'',postcode:formatPostcode(rowPostcode(r)),tradingName:rowLabel(r),brandName:r['forecourts.brand_name']||''}));
-}
-export function selectStations(rows,configured){
-  return configured.map(t=>{
-    const row=rows.find(r=>t.nodeId ? r['forecourts.node_id']===t.nodeId : normalizePostcode(rowPostcode(r))===normalizePostcode(t.postcode));
-    if(!row)return {...t,unavailable:true};
-    const price=Number(row['forecourts.fuel_price.E10']);
-    const rawTime=row['forecourts.price_submission_timestamp.E10']||row['forecourts.price_change_effective_timestamp.E10'];
-    const updated=new Date(rawTime);
-    return {...t,nodeId:row['forecourts.node_id']||t.nodeId,postcode:formatPostcode(rowPostcode(row)),price,updated,unavailable:!Number.isFinite(price)||Number.isNaN(updated.getTime())};
-  });
-}
-export function sanitizeStations(value){
-  if(!Array.isArray(value))return DEFAULT_STATIONS.map(x=>({...x}));
-  return value.slice(0,MAX_STATIONS).filter(x=>x&&typeof x.displayName==='string'&&typeof x.postcode==='string').map(x=>({id:x.id||x.nodeId||`postcode:${normalizePostcode(x.postcode)}`,nodeId:x.nodeId||'',displayName:x.displayName.trim().slice(0,24)||x.tradingName||'Station',postcode:formatPostcode(x.postcode),tradingName:x.tradingName||''}));
-}
+export const DEFAULT_STATIONS=[{id:'pc:SK82AJ',displayName:'Esso',postcode:'SK8 2AJ'},{id:'pc:SK30RL',displayName:'Morrisons',postcode:'SK3 0RL'},{id:'pc:SK12BT',displayName:'Tesco',postcode:'SK1 2BT'},{id:'pc:OL70NS',displayName:'Work',postcode:'OL7 0NS'}];
+export const MAX_STATIONS=6,MAX_CSV_BYTES=15*1024*1024;
+export const norm=v=>String(v||'').toUpperCase().replace(/\s+/g,'').trim();
+export const fmt=v=>{const c=norm(v);return c.length<5?String(v||'').toUpperCase().trim():`${c.slice(0,-3)} ${c.slice(-3)}`};
+export const esc=v=>String(v||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+export const secondaryLabel=(brand,pc)=>brand&&norm(brand)!==norm(pc)?`${brand} · ${pc}`:pc;
+export function rank(v,vs,lower=true){const a=vs.filter(Number.isFinite),u=[...new Set(a)].sort((a,b)=>a-b);if(!Number.isFinite(v)||!u.length)return'';if(u.length===1)return'green';return lower?(v===u[0]?'green':v===u.at(-1)?'red':'orange'):(v===u.at(-1)?'green':v===u[0]?'red':'orange')}
+export function age(d,n=new Date()){const m=Math.floor((n-d)/60000);if(m<1)return'Just updated';if(m<60)return`${m} minute${m===1?'':'s'} ago`;const h=Math.floor(m/60);if(h<24)return`${h} hour${h===1?'':'s'} ago`;const x=Math.floor(h/24);return x===1?'Yesterday':`${x} days ago`}
+export function csv(text){const rows=[];let row=[],f='',q=false;for(let i=0;i<text.length;i++){const c=text[i];if(q){if(c==='"'&&text[i+1]==='"'){f+='"';i++}else if(c==='"')q=false;else f+=c}else if(c==='"')q=true;else if(c===','){row.push(f);f=''}else if(c==='\n'){row.push(f.replace(/\r$/,''));rows.push(row);row=[];f=''}else f+=c}if(f||row.length){row.push(f);rows.push(row)}const h=rows.shift()||[];return rows.filter(r=>r.some(Boolean)).map(r=>Object.fromEntries(h.map((k,i)=>[k,r[i]??''])))}
+const pc=r=>r['forecourts.location.postcode']||'';
+export function findPc(rows,p){const n=norm(p);return rows.filter(r=>norm(pc(r))===n&&String(r['forecourts.permanent_closure']).toUpperCase()!=='TRUE').map(r=>({nodeId:r['forecourts.node_id']||'',postcode:fmt(pc(r)),tradingName:r['forecourts.trading_name']||r['forecourts.brand_name']||'Unnamed forecourt',brandName:r['forecourts.brand_name']||''}))}
+export function select(rows,cfg,mode='petrol'){const suf=mode==='diesel'?'B7S':'E10';return cfg.map(t=>{const r=rows.find(x=>t.nodeId?x['forecourts.node_id']===t.nodeId:norm(pc(x))===norm(t.postcode));if(!r)return{...t,unavailable:true};const price=Number(r[`forecourts.fuel_price.${suf}`]);const updated=new Date(r[`forecourts.price_submission_timestamp.${suf}`]||r[`forecourts.price_change_effective_timestamp.${suf}`]);return{...t,nodeId:r['forecourts.node_id']||t.nodeId,price,updated,unavailable:!(Number.isFinite(price)&&price>=50&&price<=400)||Number.isNaN(updated.getTime())}})}
+export function clean(v){if(!Array.isArray(v))return DEFAULT_STATIONS.map(x=>({...x}));return v.slice(0,MAX_STATIONS).filter(x=>x&&typeof x.displayName==='string'&&typeof x.postcode==='string').map(x=>({id:x.id||x.nodeId||`pc:${norm(x.postcode)}`,nodeId:x.nodeId||'',displayName:x.displayName.trim().slice(0,24)||'Station',postcode:fmt(x.postcode),tradingName:x.tradingName||''}))}

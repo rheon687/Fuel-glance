@@ -1,9 +1,1 @@
-{
-  "name": "Fuel Glance",
-  "short_name": "Fuel",
-  "start_url": "./",
-  "display": "standalone",
-  "background_color": "#000000",
-  "theme_color": "#000000",
-  "description": "Configurable E10 prices for favourite UK fuel stations."
-}
+{"name":"Fuel Glance","short_name":"Fuel","start_url":"./","display":"standalone","background_color":"#000000","theme_color":"#000000","description":"Petrol and diesel prices for favourite UK fuel stations."}
