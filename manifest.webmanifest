@@ -1,0 +1,9 @@
+{
+  "name": "Fuel Glance",
+  "short_name": "Fuel",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "description": "E10 prices for Esso, Morrisons and Tesco on Paul's route."
+}
