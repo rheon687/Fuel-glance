@@ -1,7 +1,8 @@
 export const TARGETS = [
   { displayName: 'Esso', postcode: 'SK8 2AJ' },
   { displayName: 'Morrisons', postcode: 'SK3 0RL' },
-  { displayName: 'Tesco', postcode: 'SK1 2BT' }
+  { displayName: 'Tesco', postcode: 'SK1 2BT' },
+  { displayName: 'Work', postcode: 'OL7 0NS' }
 ];
 
 export function normalizePostcode(value=''){ return value.toUpperCase().replace(/\s+/g,'').trim(); }

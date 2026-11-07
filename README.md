@@ -1,6 +1,8 @@
 # Fuel Glance
 
 ## Version
+1.0.3 adds Shell Guide Bridge (OL7 0NS) with user-facing label `Work`, using the existing four-station ranking logic.
+
 1.0.2 fixes the Morrisons forecourt postcode to the Fuel Finder identifier SK3 0RL.
 
 1.0.1 fixed station matching for the live Fuel Finder CSV field `forecourts.location.postcode`.
@@ -11,8 +13,9 @@ A small installable Progressive Web App showing E10 prices for three configured 
 - Esso, 83A Stockport Road, Cheadle, SK8 2AJ
 - Morrisons, Edgeley Road, Stockport, SK3 0RL
 - Tesco, Tiviot Way, Stockport, SK1 2BT
+- Work (Shell Guide Bridge), 188 Stockport Road, Ashton-under-Lyne, OL7 0NS
 
-The UI deliberately shows only Esso, Morrisons and Tesco. Station matching is isolated in `logic.js` and currently uses exact postcodes.
+The UI deliberately shows only Esso, Morrisons, Tesco and Work. Station matching is isolated in `logic.js` and currently uses exact postcodes.
 
 ## Data
 The app reads the public `data.csv` mirror in `matthewgall/fuelfinder-archive`, which republishes UK Government Fuel Finder open data under the Open Government Licence v3.0. Replace `DATA_URL` in `app.js` with the official downloadable CSV URL when a stable browser-readable URL is confirmed.
