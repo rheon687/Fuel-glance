@@ -1,6 +1,9 @@
-# Fuel Glance v2.0.1
+# Fuel Glance v2.0.2
 
 Fuel Glance is an installable, account-free Progressive Web App for comparing E10 prices and price freshness across favourite UK forecourts.
+
+## v2.0.2
+- Adds a small always-visible version marker at bottom-right to distinguish GitHub deployment delay, browser/PWA cache and genuine UI defects.
 
 ## v2.0.1
 - Fixes the bottom-centre station-management petrol-pump icon rendering on iOS/PWA display.
