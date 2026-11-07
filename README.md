@@ -1,4 +1,4 @@
-# Fuel Glance v2.3.1
+# Fuel Glance v2.4.0
 Security-hardened static PWA. Main view switches between E10 petrol and B7S standard diesel while preserving the compact glance layout. Price order, price colour and freshness colour follow the selected fuel. Bottom centre combined pump+magnifier opens station management. Station selection avoids duplicate postcode display. Favourites and selected fuel remain device-local. No accounts, analytics or secrets.
 
 
@@ -19,3 +19,10 @@ Security-hardened static PWA. Main view switches between E10 petrol and B7S stan
 ## v2.3.1
 - Main-screen Manage control is petrol-pump only; magnifier removed.
 - Your stations secondary text now guarantees a postcode is rendered once when no distinct trading name exists.
+
+
+## v2.4.0
+- Accepted cog-only Station Settings control on the main screen.
+- Petrol and Diesel buttons identify E10 and B7 grades.
+- Strengthens postcode de-duplication for legacy/default station metadata across Your stations/Edit and postcode search.
+- Retains selected-fuel persistence, Safari URL-constructor fix, security hardening and visible version diagnostics.

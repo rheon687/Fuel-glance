@@ -4,3 +4,6 @@
 
 /* v2.3.1 */
 .manage .manage-icons{gap:0;width:52px}.manage .pump-symbol{width:36px;height:42px}
+
+/* v2.4.0 accepted main-screen controls */
+.fuel{min-height:46px;padding:7px 5px 6px;line-height:1.05}.fuel .fuel-title{display:block;font-size:12px;font-weight:750}.fuel .fuel-grade{display:block;font-size:8px;letter-spacing:.7px;margin-top:3px;opacity:.76}.manage.settings{display:flex;align-items:center;justify-content:center;width:54px;height:54px;margin:auto;border:1px solid #343434;background:#151515;border-radius:50%;color:#d8d6cf;padding:7px}.manage.settings svg{display:block;width:36px;height:36px;fill:none;stroke:currentColor;stroke-width:2.3;stroke-linecap:round;stroke-linejoin:round}
