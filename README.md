@@ -1,37 +1,28 @@
-# Fuel Glance
+# Fuel Glance v2.0.0
 
-## Version
-1.0.3 adds Shell Guide Bridge (OL7 0NS) with user-facing label `Work`, using the existing four-station ranking logic.
+Fuel Glance is an installable, account-free Progressive Web App for comparing E10 prices and price freshness across favourite UK forecourts.
 
-1.0.2 fixes the Morrisons forecourt postcode to the Fuel Finder identifier SK3 0RL.
+## v2 behaviour
+- Keeps the established black glance screen and pull-to-refresh.
+- Adds a bottom-centre petrol-pump control that opens station management.
+- Users can add a station by exact postcode, select from all matching Fuel Finder forecourts, and assign a friendly name.
+- Users can rename or remove stations.
+- Up to six favourites are stored only in the browser on that device. No account or backend database is used.
+- Existing users are migrated to the established Esso, Morrisons, Tesco and Work defaults automatically.
+- Price and freshness rankings remain independent: best green, worst red, all intermediate values orange; ties share rank.
 
-1.0.1 fixed station matching for the live Fuel Finder CSV field `forecourts.location.postcode`.
-
-A small installable Progressive Web App showing E10 prices for three configured UK forecourts, ordered cheapest first.
-
-## Stations
-- Esso, 83A Stockport Road, Cheadle, SK8 2AJ
-- Morrisons, Edgeley Road, Stockport, SK3 0RL
-- Tesco, Tiviot Way, Stockport, SK1 2BT
-- Work (Shell Guide Bridge), 188 Stockport Road, Ashton-under-Lyne, OL7 0NS
-
-The UI deliberately shows only Esso, Morrisons, Tesco and Work. Station matching is isolated in `logic.js` and currently uses exact postcodes.
+## Architecture
+- `logic.js`: CSV parsing, postcode matching, station selection, ranking, validation and default configuration.
+- `app.js`: data retrieval, local persistence, view workflow, rendering, refresh and failure/cache handling.
+- `styles.css`: glance and station-management presentation.
+- `sw.js`: offline shell caching and update activation.
+- `tests.mjs`: regression coverage for defaults, matching, sorting colours, ties, limits and station selection.
 
 ## Data
-The app reads the public `data.csv` mirror in `matthewgall/fuelfinder-archive`, which republishes UK Government Fuel Finder open data under the Open Government Licence v3.0. Replace `DATA_URL` in `app.js` with the official downloadable CSV URL when a stable browser-readable URL is confirmed.
+The app reads the public UK Fuel Finder CSV mirror at `matthewgall/fuelfinder-archive`. No credentials or secrets are used.
 
-## Behaviour
-- Sorts available stations by E10 price ascending.
-- Price colours: cheapest green, highest red, intermediate unique values orange; ties share the same rank.
-- Freshness colours are calculated independently: newest green, oldest red, intermediate unique values orange.
-- Pull down on touch devices to refresh. Press R on desktop.
-- Falls back to the last successful local copy if the live request fails.
+## Run and test
+Serve over HTTP, for example `python -m http.server 8080`. Run tests with `node tests.mjs`.
 
-## Run locally
-Serve the folder over HTTP, for example `python -m http.server 8080`, then open `http://localhost:8080`. Service workers and installability do not work reliably from `file://`.
-
-## Tests
-Run `node tests.mjs`.
-
-## Handoff notes
-Core parsing, matching, ranking and formatting are in `logic.js`. UI/data orchestration is in `app.js`. The main operational dependency is the external CSV URL and its schema. No credentials are stored.
+## Known limitation
+Favourite stations are device-local. A user's iPhone and PC do not automatically share configuration. Clearing browser/site data removes the saved list and restores the four defaults.

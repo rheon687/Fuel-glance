@@ -5,5 +5,5 @@
   "display": "standalone",
   "background_color": "#000000",
   "theme_color": "#000000",
-  "description": "E10 prices for Esso, Morrisons and Tesco on Paul's route."
+  "description": "Configurable E10 prices for favourite UK fuel stations."
 }
